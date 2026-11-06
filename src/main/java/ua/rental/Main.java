@@ -7,54 +7,57 @@ import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== 1. Успішні сценарії під час роботи з доменом ===");
+        System.out.println("=== 1. Створення record-обʼєкта та звернення до його компонентів ===");
+        SportsCustomer customer1 = SportsCustomer.of("123456789", "Іван Петренко", "+380971112233");
 
-        // Створення клієнта через фабричний метод of(...)
-        SportsCustomer customer = SportsCustomer.of("123456789", "Іван Петренко", "+380971112233");
+        // Accessing record components via generated accessor methods
+        System.out.println("Паспорт клієнта: " + customer1.passportNumber());
+        System.out.println("ПІБ клієнта: " + customer1.fullName());
+        System.out.println("Телефон: " + customer1.phone());
 
-        // Створення майна
-        EquipmentItem ski = new EquipmentItem("INV-SKI-001", "Alpine Skis 170cm", "ski", 350.0, "new");
-        System.out.println("Створено майно: " + ski);
-
-        // Зміна полів з позначкою ✎
-        ski.setPricePerDay(400.0);
-        ski.setCondition("GOOD");
-
-        // Договір оренди на 3 дні
-        LocalDate start = LocalDate.now();
-        LocalDate end = start.plusDays(3);
-        RentalAgreement agreement = new RentalAgreement(customer, ski, start, end, 1000.0);
-        System.out.println("Створено угоду: " + agreement);
-
-        // Обчислювальні методи з RentalUtils
-        System.out.println("Кількість днів оренди: " + RentalUtils.rentalDays(agreement));
-        System.out.println("Загальна вартість оренди: " + RentalUtils.totalCost(agreement) + " грн");
-
-        // Огляд при поверненні через of(...)
-        ReturnInspection inspection = ReturnInspection.of("INSP-101", agreement, end, 0.0);
-        System.out.println("Акт огляду: " + inspection);
-
-        System.out.println("\n=== 2. Демонстрація невдалих сценаріїв (Помилки валідації) ===");
-
-        try {
-            System.out.println("Тест 1: Невалідна категорія...");
-            new EquipmentItem("INV-002", "Велосипед", "UNKNOWN_CATEGORY", 100.0, "NEW");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Піймано очікувану помилку: " + e.getMessage());
+        System.out.println("\n=== 2. Enum у роботі ===");
+        // a) Iterating through values() and accessing custom enum field via getter
+        System.out.println("Усі доступні стани обладнання та їхні коефіцієнти:");
+        for (EquipmentCondition cond : EquipmentCondition.values()) {
+            System.out.println(" - " + cond.name() + ": discountFactor = " + cond.getDiscountFactor());
         }
 
+        // b) Handling invalid valueOf() in a try-catch block
         try {
-            System.out.println("Тест 2: Дата кінця оренди раніше дати початку...");
-            new RentalAgreement(customer, ski, LocalDate.now(), LocalDate.now().minusDays(1), 500.0);
+            System.out.println("\nСпроба виклику EquipmentCategory.valueOf(\"INVALID_CATEGORY\")...");
+            EquipmentCategory invalidCategory = EquipmentCategory.valueOf("INVALID_CATEGORY");
         } catch (IllegalArgumentException e) {
-            System.out.println("Піймано очікувану помилку: " + e.getMessage());
+            System.out.println("Піймано очікувану помилку (valueOf): " + e.getMessage());
         }
 
+        System.out.println("\n=== 3. Перевірка обох switch-виразів ===");
+        EquipmentItem item = new EquipmentItem("INV-SKI-001", "Лижі Alpine 170см", EquipmentCategory.SKI, 350.0, EquipmentCondition.NEW);
+
+        // Testing 1st switch expression (all enum constants covered, no default)
+        double conditionMult = RentalUtils.getConditionMultiplier(item.getCondition());
+        System.out.println("1-й switch (множник за станом NEW): " + conditionMult);
+
+        // Testing 2nd switch expression (category price rate)
+        double categoryRate = RentalUtils.getCategoryPriceRate(item.getCategory());
+        System.out.println("2-й switch (коефіцієнт категорії SKI): " + categoryRate);
+
+        System.out.println("\n=== 4. Створення record з невалідними даними (компактний конструктор) ===");
         try {
-            System.out.println("Тест 3: Негативна ціна оренди...");
-            ski.setPricePerDay(-50.0);
+            System.out.println("Спроба створити RentalAgreement з неправильними датами оренди...");
+            new RentalAgreement(customer1, item, LocalDate.now(), LocalDate.now().minusDays(2), 500.0);
         } catch (IllegalArgumentException e) {
-            System.out.println("Піймано очікувану помилку: " + e.getMessage());
+            System.out.println("Піймано очікувану помилку з компактного конструктора: " + e.getMessage());
         }
+
+        System.out.println("\n=== 5. Порівняння двох однакових record-обʼєктів (equals та hashCode) ===");
+        SportsCustomer customer2 = SportsCustomer.of("123456789", "Іван Петренко", "+380971112233");
+
+        System.out.println("customer1.equals(customer2): " + customer1.equals(customer2));
+        System.out.println("customer1.hashCode() == customer2.hashCode(): " + (customer1.hashCode() == customer2.hashCode()));
+
+        System.out.println("\n=== 6. Вивід record через згенерований toString() ===");
+        RentalAgreement validAgreement = new RentalAgreement(customer1, item, LocalDate.now(), LocalDate.now().plusDays(3), 1000.0);
+
+        System.out.println("Автоматичний toString(): " + validAgreement);
     }
 }

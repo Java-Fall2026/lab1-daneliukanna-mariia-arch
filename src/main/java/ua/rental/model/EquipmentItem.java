@@ -4,45 +4,44 @@ import ua.common.BaseEntity;
 import ua.rental.util.RentalUtils;
 
 import java.util.Objects;
-import java.util.Set;
 
 public class EquipmentItem extends BaseEntity {
 
-    private static final Set<String> ALLOWED_CATEGORIES = Set.of("SKI", "SNOWBOARD", "BICYCLE", "KAYAK");
-    private static final Set<String> ALLOWED_CONDITIONS = Set.of("NEW", "GOOD", "FAIR", "MAINTENANCE");
-
     private final String inventoryNumber; // 🔑
     private final String name;
-    private final String category;
+    private final EquipmentCategory category;
     private double pricePerDay; // ✎
-    private String condition;   // ✎
+    private EquipmentCondition condition;   // ✎
 
-    public EquipmentItem(String inventoryNumber, String name, String category, double pricePerDay, String condition) {
+    public EquipmentItem(String inventoryNumber, String name, EquipmentCategory category, double pricePerDay, EquipmentCondition condition) {
         super();
         RentalUtils.requireNonBlank(inventoryNumber, "inventoryNumber");
         RentalUtils.requireNonBlank(name, "name");
         RentalUtils.requirePositive(pricePerDay, "pricePerDay");
+        RentalUtils.requireNonNull(category, "category");
+        RentalUtils.requireNonNull(condition, "condition");
 
         this.inventoryNumber = inventoryNumber;
         this.name = name;
-        this.category = RentalUtils.validateEnum(category, ALLOWED_CATEGORIES, "category");
+        this.category = category;
         this.pricePerDay = pricePerDay;
-        this.condition = RentalUtils.validateEnum(condition, ALLOWED_CONDITIONS, "condition");
+        this.condition = condition;
     }
 
     public String getInventoryNumber() { return inventoryNumber; }
     public String getName() { return name; }
-    public String getCategory() { return category; }
+    public EquipmentCategory getCategory() { return category; }
     public double getPricePerDay() { return pricePerDay; }
-    public String getCondition() { return condition; }
+    public EquipmentCondition getCondition() { return condition; }
 
     public final void setPricePerDay(double pricePerDay) {
         RentalUtils.requirePositive(pricePerDay, "pricePerDay");
         this.pricePerDay = pricePerDay;
     }
 
-    public final void setCondition(String condition) {
-        this.condition = RentalUtils.validateEnum(condition, ALLOWED_CONDITIONS, "condition");
+    public final void setCondition(EquipmentCondition condition) {
+        RentalUtils.requireNonNull(condition, "condition");
+        this.condition = condition;
     }
 
     @Override
@@ -63,9 +62,9 @@ public class EquipmentItem extends BaseEntity {
         return "EquipmentItem{" +
                 "inventoryNumber='" + inventoryNumber + '\'' +
                 ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
+                ", category=" + category +
                 ", pricePerDay=" + pricePerDay +
-                ", condition='" + condition + '\'' +
+                ", condition=" + condition +
                 ", createdAt=" + createdAt +
                 '}';
     }
