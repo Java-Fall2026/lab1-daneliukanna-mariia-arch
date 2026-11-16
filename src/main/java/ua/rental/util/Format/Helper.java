@@ -1,4 +1,4 @@
-package ua.rental.util;
+package ua.rental.util.Format;
 
 class FormatHelper {
 
