@@ -1,0 +1,11 @@
+inventoryNumber,name,category,pricePerDay,condition
+SKI-001,Alpine skis,SKI,350.0,NEW
+SNB-002,Freestyle snowboard,SNOWBOARD,420.0,GOOD
+BIKE-003,Mountain bike,BICYCLE,500.0,GOOD
+KAYAK-004,Two-seat kayak,KAYAK,650.0,FAIR
+SKI-005,Junior skis,SKI,250.0,MAINTENANCE
+BAD-006,Missing category,,300.0,GOOD
+BAD-007,Unknown category,SKATE,300.0,GOOD
+BAD-008,Wrong price,SKI,not-a-number,NEW
+BAD-009,Negative price,BICYCLE,-50.0,GOOD
+BAD-010,Too few fields,SKI,200.0
