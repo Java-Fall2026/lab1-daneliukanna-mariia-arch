@@ -6,26 +6,26 @@ public class ValidationHelper {
 
     public static void requireNonNull(Object obj, String fieldName) {
         if (obj == null) {
-            throw new IllegalArgumentException("Очікувалось не-null значення для '" + fieldName + "', але отримано: null");
+            throw new IllegalArgumentException("Expected a non-null value for '" + fieldName + "', but received: null");
         }
     }
 
     public static void requireNonBlank(String value, String fieldName) {
         requireNonNull(value, fieldName);
         if (value.trim().isEmpty()) {
-            throw new IllegalArgumentException("Очікувався непорожній рядок для '" + fieldName + "', але отримано: порожній рядок");
+            throw new IllegalArgumentException("Expected a non-blank string for '" + fieldName + "', but received: an empty string");
         }
     }
 
     public static void requirePositive(double value, String fieldName) {
         if (value <= 0) {
-            throw new IllegalArgumentException("Очікувалось додатне значення (> 0) для '" + fieldName + "', але отримано: " + value);
+            throw new IllegalArgumentException("Expected a positive value (> 0) for '" + fieldName + "', but received: " + value);
         }
     }
 
     public static void requireNonNegative(double value, String fieldName) {
         if (value < 0) {
-            throw new IllegalArgumentException("Очікувалось неот'ємне значення (>= 0) для '" + fieldName + "', але отримано: " + value);
+            throw new IllegalArgumentException("Expected a non-negative value (>= 0) for '" + fieldName + "', but received: " + value);
         }
     }
 
