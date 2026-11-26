@@ -9,3 +9,4 @@ BAD-007,Unknown category,SKATE,300.0,GOOD
 BAD-008,Wrong price,SKI,not-a-number,NEW
 BAD-009,Negative price,BICYCLE,-50.0,GOOD
 BAD-010,Too few fields,SKI,200.0
+SKI-001,Duplicate alpine skis,SKI,375.0,GOOD
